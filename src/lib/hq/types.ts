@@ -1,6 +1,6 @@
 export type RoomLayer = "ceo" | "director" | "worker";
 export type RoomKind = "grok-bot" | "dock";
-export type Desk = "command" | "marketing" | "sales" | "company" | "channel";
+export type Desk = "command" | "marketing" | "sales" | "tech" | "company" | "channel";
 
 export type Room = {
   id: string;
