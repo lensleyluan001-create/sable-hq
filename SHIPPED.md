@@ -1,6 +1,9 @@
 # SABLE HQ — shipped
 
 Live production: **https://sable-hq.vercel.app**
+Alias: https://sable-hq-finance-and-insurance-exe.vercel.app
+
+Public. SSO and password protection are off.
 
 Sable.co command surface. HQ navigates and commands Grok bots. It does not run agent runtimes in the page.
 
