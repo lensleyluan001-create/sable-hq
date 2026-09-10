@@ -38,12 +38,19 @@ export function routeOrder(text: string): Room {
     if (room.id === "ceo") continue;
     let score = 0;
     if (lower.includes(room.name.toLowerCase())) score += 4;
+    if (lower.includes(room.callsign.toLowerCase())) score += 3;
     for (const key of room.keywords) {
       if (key.length > 2 && lower.includes(key)) score += key.includes(" ") ? 3 : 2;
     }
     if (score > 0 && (!best || score > best.score)) best = { room, score };
   }
   if (best) return best.room;
+  if (/\b(code|coder|pr|pull request|typescript|deploy|vercel|github|repo|security|qa|tester|bug|crm bug|api)\b/.test(lower)) {
+    if (/\b(code|coder|pr|pull request|typescript|repo|ship)\b/.test(lower)) {
+      return roomById("coder") ?? roomById("tech") ?? ROOMS[1];
+    }
+    return roomById("tech") ?? ROOMS[1];
+  }
   if (/\bsales|quote|deal|crm|chase\b/.test(lower)) return roomById("sales") ?? ROOMS[2];
   return roomById("marketing") ?? ROOMS[1];
 }
@@ -93,8 +100,9 @@ export function protocolText() {
     "HQ navigates and commands Grok bots. It does not run them inside this page.",
     "",
     "CHAIN",
-    "Luan → CEO SABLE (JARVIS voice) → Marketing CEO or Sales Manager (peers).",
+    "Luan → CEO SABLE (JARVIS voice) → Marketing CEO, Sales Manager, or Tech Master (peers).",
     "Marketing bots report to Marketing CEO. Sales bots report to Sales Manager.",
+    "Tech bots (Sable Coder, Security, app tester) report to Tech Master.",
     "Company-level bots report to CEO SABLE. Prompt bot is prompts only. Floor is shared knowledge.",
     "Escalate through CEO SABLE. Do not skip to Luan unless Luan asks.",
     "Cadence: desks collect ~17:00, rollup to CEO ~17:15, CEO briefs Luan 17:30 SAST.",
@@ -112,8 +120,8 @@ export function protocolText() {
   lines.push("");
   lines.push("HARD RULES");
   lines.push("1. Never invent prices or discounts.");
-  lines.push("2. Do not assign across Marketing/Sales except via CEO SABLE.");
-  lines.push("3. If ownership is unclear, name Marketing CEO vs Sales Manager vs company-level.");
+  lines.push("2. Do not assign across Marketing/Sales/Tech except via CEO SABLE.");
+  lines.push("3. If ownership is unclear, name Marketing CEO vs Sales Manager vs Tech Master vs company-level.");
   lines.push("4. Ads budget is R0 until organic Reels + Meta BM are ready.");
   return lines.join("\n");
 }
