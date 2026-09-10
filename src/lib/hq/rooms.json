@@ -23,10 +23,19 @@
       "desk": "command",
       "function": "Main CEO. Reports to Luan. Speaks like JARVIS. Assigns only to Marketing CEO or Sales Manager.",
       "openTarget": "https://grok.com/",
-      "keywords": ["jarvis", "ceo", "sable ceo", "command", "priority"],
+      "keywords": [
+        "jarvis",
+        "ceo",
+        "sable ceo",
+        "command",
+        "priority"
+      ],
       "doneCheck": "Marketing CEO or Sales Manager has a copied pack with one job and a done-check. Daily 17:30 brief is ready for Luan if asked.",
-      "jobTemplate": "You are CEO SABLE. Report to Luan. Speak briefly like JARVIS. Assign work only to Marketing CEO or Sales Manager — they cascade. Do not skip to Luan unless Luan asks. Never invent prices. Daily brief to Luan at 17:30 SAST.",
-      "layout": { "x": 50, "y": 10 }
+      "jobTemplate": "You are CEO SABLE. Report to Luan. Speak briefly like JARVIS. Assign work only to Marketing CEO or Sales Manager \u2014 they cascade. Do not skip to Luan unless Luan asks. Never invent prices. Daily brief to Luan at 17:30 SAST.",
+      "layout": {
+        "x": 50,
+        "y": 10
+      }
     },
     {
       "id": "marketing",
@@ -39,10 +48,19 @@
       "desk": "marketing",
       "function": "Peer to Sales Manager. Owns the Sable Marketing folder. Collect ~17:00, rollup to CEO ~17:15.",
       "openTarget": "https://grok.com/",
-      "keywords": ["marketing", "mkt", "campaign", "reels", "content"],
+      "keywords": [
+        "marketing",
+        "mkt",
+        "campaign",
+        "reels",
+        "content"
+      ],
       "doneCheck": "The right marketing bot has one job. Rollup ready for CEO SABLE by 17:15.",
       "jobTemplate": "You are Marketing CEO. Peer to Sales Manager. Report to CEO SABLE. Own Ideas, Social, Ads, Inbox, Analytics, Edit. Collect ~17:00. Rollup to CEO ~17:15. Do not assign Sales bots. Never invent prices. Ads stay R0 until organic Reels + Meta BM are ready.",
-      "layout": { "x": 28, "y": 26 }
+      "layout": {
+        "x": 28,
+        "y": 26
+      }
     },
     {
       "id": "sales",
@@ -55,10 +73,73 @@
       "desk": "sales",
       "function": "Peer to Marketing CEO. Owns the Sable Sales folder. Collect ~17:00, rollup to CEO ~17:15.",
       "openTarget": "https://grok.com/",
-      "keywords": ["sales manager", "sales", "quote", "close", "pipeline"],
+      "keywords": [
+        "sales manager",
+        "sales",
+        "quote",
+        "close",
+        "pipeline"
+      ],
       "doneCheck": "The next sales action is named. CRM is the system of record.",
       "jobTemplate": "You are Sales Manager. Peer to Marketing CEO. Report to CEO SABLE. Own Sales Inbox, Sales Chase, CRM assistant. Collect ~17:00. Rollup to CEO ~17:15. Do not own IG. Never invent prices. Park work on your desk, then CRM.",
-      "layout": { "x": 74, "y": 26 }
+      "layout": {
+        "x": 74,
+        "y": 26
+      }
+    },
+    {
+      "id": "tech",
+      "slug": "tech-master",
+      "name": "Tech Master",
+      "callsign": "TECH",
+      "layer": "director",
+      "parentId": "ceo",
+      "kind": "grok-bot",
+      "desk": "tech",
+      "function": "Own Sable Tech: cascade Coder/Security/app tester; ship CRM/tools/security that get leads and customers",
+      "openTarget": "https://grok.com/",
+      "keywords": [
+        "tech",
+        "coder",
+        "security",
+        "crm",
+        "api",
+        "deploy",
+        "vercel",
+        "github"
+      ],
+      "doneCheck": "Assigned bot shipped or reported precise blocker; Tech Master owns the result",
+      "jobTemplate": "TECH JOB: {job}. Cascade the right tech bot. Never invent prices. Escalate through CEO SABLE.",
+      "layout": {
+        "x": 0,
+        "y": 180
+      }
+    },
+    {
+      "id": "coder",
+      "slug": "sable-coder",
+      "name": "Sable Coder",
+      "callsign": "CODER",
+      "layer": "worker",
+      "parentId": "tech",
+      "kind": "grok-bot",
+      "desk": "tech",
+      "function": "Ship production code for sable-floor, tools, automations, integrations",
+      "openTarget": "https://grok.com/",
+      "keywords": [
+        "code",
+        "pr",
+        "ship",
+        "repo",
+        "typescript",
+        "fix"
+      ],
+      "doneCheck": "PR opened or precise access/blocker reported",
+      "jobTemplate": "CODER JOB: {job}. Clean PR, tests when useful, no scope creep. Escalate via Tech Master.",
+      "layout": {
+        "x": -120,
+        "y": 280
+      }
     },
     {
       "id": "ideas",
@@ -71,10 +152,19 @@
       "desk": "marketing",
       "function": "Content and campaign ideas, scripts, pillars.",
       "openTarget": "https://grok.com/",
-      "keywords": ["ideas", "idea", "script", "pillar", "angle"],
+      "keywords": [
+        "ideas",
+        "idea",
+        "script",
+        "pillar",
+        "angle"
+      ],
       "doneCheck": "Ranked ideas or a script the operator can hand to Social or Edit.",
       "jobTemplate": "You are Sable Ideas. Report to Marketing CEO. Ideas, scripts, pillars only. The shoe is the hero. Do not post, spend, or invent prices.",
-      "layout": { "x": 8, "y": 46 }
+      "layout": {
+        "x": 8,
+        "y": 46
+      }
     },
     {
       "id": "social",
@@ -85,12 +175,22 @@
       "parentId": "marketing",
       "kind": "grok-bot",
       "desk": "marketing",
-      "function": "@sable_co_ execution — bio, Reels, captions, demand DMs.",
+      "function": "@sable_co_ execution \u2014 bio, Reels, captions, demand DMs.",
       "openTarget": "https://grok.com/",
-      "keywords": ["social", "sable_co", "reel", "caption", "post", "hooks"],
+      "keywords": [
+        "social",
+        "sable_co",
+        "reel",
+        "caption",
+        "post",
+        "hooks"
+      ],
       "doneCheck": "Paste-ready @sable_co_ assets: caption, hook, and posting note.",
       "jobTemplate": "You are Sable Social. Report to Marketing CEO. Execute @sable_co_: bio, Reels, captions, demand DMs. Brand-first. The shoe is the hero. Hand hot leads to Sable Inbox. Never invent prices.",
-      "layout": { "x": 20, "y": 46 }
+      "layout": {
+        "x": 20,
+        "y": 46
+      }
     },
     {
       "id": "ads",
@@ -103,10 +203,19 @@
       "desk": "marketing",
       "function": "Meta + TikTok paid. Budget R0 until organic Reels + Meta BM are ready.",
       "openTarget": "https://grok.com/",
-      "keywords": ["ads", "ad", "meta", "tiktok paid", "paid"],
+      "keywords": [
+        "ads",
+        "ad",
+        "meta",
+        "tiktok paid",
+        "paid"
+      ],
       "doneCheck": "If spend is not authorised: a ready-but-hold note. If authorised: variants with hook, body, CTA.",
       "jobTemplate": "You are Sable Ads. Report to Marketing CEO. Meta + TikTok paid only. Budget is R0 until organic Reels and Meta Business Manager are ready. Do not spend. Never invent prices.",
-      "layout": { "x": 32, "y": 46 }
+      "layout": {
+        "x": 32,
+        "y": 46
+      }
     },
     {
       "id": "inbox",
@@ -119,10 +228,19 @@
       "desk": "marketing",
       "function": "IG/TikTok DMs and comments. Qualify. Hand hot leads to Sales Inbox.",
       "openTarget": "https://grok.com/",
-      "keywords": ["inbox", "dm", "comment", "ig", "qualify"],
+      "keywords": [
+        "inbox",
+        "dm",
+        "comment",
+        "ig",
+        "qualify"
+      ],
       "doneCheck": "Reply scripts plus a clear hot-lead handoff to Sales Inbox.",
       "jobTemplate": "You are Sable Inbox. Report to Marketing CEO. Own IG/TikTok DMs and comments. Qualify. Hand hot leads to Sales Inbox. Do not close deals. Never invent prices.",
-      "layout": { "x": 44, "y": 46 }
+      "layout": {
+        "x": 44,
+        "y": 46
+      }
     },
     {
       "id": "analytics",
@@ -135,10 +253,19 @@
       "desk": "marketing",
       "function": "Views, reach, saves, DMs scorecard. No vanity. No post or spend execution.",
       "openTarget": "https://grok.com/",
-      "keywords": ["analytics", "scorecard", "reach", "saves", "metrics"],
+      "keywords": [
+        "analytics",
+        "scorecard",
+        "reach",
+        "saves",
+        "metrics"
+      ],
       "doneCheck": "A short scorecard from numbers the operator provided, plus one gap.",
       "jobTemplate": "You are Sable Analytics. Report to Marketing CEO. Scorecard: views, reach, saves, DMs. No vanity metrics. Do not post or spend. Use only figures given. Never invent prices.",
-      "layout": { "x": 56, "y": 46 }
+      "layout": {
+        "x": 56,
+        "y": 46
+      }
     },
     {
       "id": "edit",
@@ -151,10 +278,20 @@
       "desk": "marketing",
       "function": "Cut Reels and TikToks from raw clips.",
       "openTarget": "https://grok.com/",
-      "keywords": ["edit", "cut", "reel", "tiktok", "caption", "thumbnail"],
+      "keywords": [
+        "edit",
+        "cut",
+        "reel",
+        "tiktok",
+        "caption",
+        "thumbnail"
+      ],
       "doneCheck": "Cut notes, caption, and thumbnail language for the named clip.",
       "jobTemplate": "You are Sable Edit. Report to Marketing CEO. Cut Reels/TikToks from raw clips. The shoe is the hero. Do not change the offer. Never invent prices.",
-      "layout": { "x": 68, "y": 46 }
+      "layout": {
+        "x": 68,
+        "y": 46
+      }
     },
     {
       "id": "sales-inbox",
@@ -167,10 +304,17 @@
       "desk": "sales",
       "function": "Intake hot handoffs. Does not own IG. Qualify. Park on Sales Manager desk.",
       "openTarget": "https://grok.com/",
-      "keywords": ["sales inbox", "handoff", "hot lead"],
+      "keywords": [
+        "sales inbox",
+        "handoff",
+        "hot lead"
+      ],
       "doneCheck": "Qualified intake parked on Sales Manager desk with next action.",
       "jobTemplate": "You are Sales Inbox. Report to Sales Manager. Intake hot handoffs. You do not own IG. Qualify. Park on the Sales Manager desk. Never invent prices.",
-      "layout": { "x": 78, "y": 46 }
+      "layout": {
+        "x": 78,
+        "y": 46
+      }
     },
     {
       "id": "sales-chase",
@@ -183,10 +327,18 @@
       "desk": "sales",
       "function": "Chase quoted or stuck deals. Deadlines and next actions.",
       "openTarget": "https://grok.com/",
-      "keywords": ["chase", "follow up", "stuck", "quoted"],
+      "keywords": [
+        "chase",
+        "follow up",
+        "stuck",
+        "quoted"
+      ],
       "doneCheck": "Each chased deal has a deadline and a next action.",
       "jobTemplate": "You are Sales Chase. Report to Sales Manager. Chase quoted or stuck deals. Deadlines + next actions. Use CRM. Never invent prices.",
-      "layout": { "x": 90, "y": 46 }
+      "layout": {
+        "x": 90,
+        "y": 46
+      }
     },
     {
       "id": "crm",
@@ -199,10 +351,19 @@
       "desk": "sales",
       "function": "Pipeline new / quoted / won / lost on the live CRM.",
       "openTarget": "https://sable-floor.vercel.app/login",
-      "keywords": ["crm", "pipeline", "won", "lost", "floor crm"],
+      "keywords": [
+        "crm",
+        "pipeline",
+        "won",
+        "lost",
+        "floor crm"
+      ],
       "doneCheck": "The live CRM is open on the correct pipeline state. HQ did not recreate CRM.",
-      "jobTemplate": "You are Sable CRM assistant. Report to Sales Manager. Pipeline is new / quoted / won / lost on https://sable-floor.vercel.app — open it, do not rebuild it. Never invent prices.",
-      "layout": { "x": 90, "y": 64 }
+      "jobTemplate": "You are Sable CRM assistant. Report to Sales Manager. Pipeline is new / quoted / won / lost on https://sable-floor.vercel.app \u2014 open it, do not rebuild it. Never invent prices.",
+      "layout": {
+        "x": 90,
+        "y": 64
+      }
     },
     {
       "id": "research",
@@ -215,10 +376,17 @@
       "desk": "company",
       "function": "Company-level research. Not under Marketing or Sales desks.",
       "openTarget": "https://grok.com/",
-      "keywords": ["research", "competitor", "insight"],
+      "keywords": [
+        "research",
+        "competitor",
+        "insight"
+      ],
       "doneCheck": "A sourced note with what is known vs missing. No invented prices.",
       "jobTemplate": "You are Sable Research. Company-level. Report to CEO SABLE, not Marketing or Sales desks. Research only. Never invent prices.",
-      "layout": { "x": 12, "y": 86 }
+      "layout": {
+        "x": 12,
+        "y": 86
+      }
     },
     {
       "id": "security",
@@ -226,15 +394,23 @@
       "name": "Sable Security",
       "callsign": "SEC",
       "layer": "worker",
-      "parentId": "ceo",
+      "parentId": "tech",
       "kind": "grok-bot",
-      "desk": "company",
+      "desk": "tech",
       "function": "Access, secrets, risk notes. Company-level.",
       "openTarget": "https://grok.com/",
-      "keywords": ["security", "secret", "access", "risk"],
+      "keywords": [
+        "security",
+        "secret",
+        "access",
+        "risk"
+      ],
       "doneCheck": "Risks listed with owner and next control. No secrets stored in HQ.",
       "jobTemplate": "You are Sable Security. Company-level. Report to CEO SABLE. Flag access and secret risk. Do not ask for passwords. Never invent prices.",
-      "layout": { "x": 28, "y": 86 }
+      "layout": {
+        "x": 28,
+        "y": 86
+      }
     },
     {
       "id": "shoe",
@@ -247,10 +423,19 @@
       "desk": "company",
       "function": "Product and make notes for the shoe. Company-level.",
       "openTarget": "https://grok.com/",
-      "keywords": ["shoe", "machine", "product", "leather", "pair"],
+      "keywords": [
+        "shoe",
+        "machine",
+        "product",
+        "leather",
+        "pair"
+      ],
       "doneCheck": "A product note that keeps the shoe as the hero. No invented prices.",
       "jobTemplate": "You are Sable Shoe Machine. Company-level. Report to CEO SABLE. The shoe is the hero. Leather shoes only. Never invent prices.",
-      "layout": { "x": 44, "y": 86 }
+      "layout": {
+        "x": 44,
+        "y": 86
+      }
     },
     {
       "id": "tester",
@@ -258,15 +443,24 @@
       "name": "Sable app tester",
       "callsign": "QA",
       "layer": "worker",
-      "parentId": "ceo",
+      "parentId": "tech",
       "kind": "grok-bot",
-      "desk": "company",
+      "desk": "tech",
       "function": "Click paths, empty states, break notes on Sable apps.",
       "openTarget": "https://grok.com/",
-      "keywords": ["tester", "qa", "test", "bug", "app tester"],
+      "keywords": [
+        "tester",
+        "qa",
+        "test",
+        "bug",
+        "app tester"
+      ],
       "doneCheck": "Pass/fail for the named flow, with one blocker if any.",
       "jobTemplate": "You are Sable app tester. Company-level. Report to CEO SABLE. Test the named Sable flow. Pass, fail, blocker. Do not redesign. Never invent prices.",
-      "layout": { "x": 60, "y": 86 }
+      "layout": {
+        "x": 60,
+        "y": 86
+      }
     },
     {
       "id": "prompt",
@@ -279,10 +473,17 @@
       "desk": "channel",
       "function": "Prompts only. Not part of Floor ops.",
       "openTarget": "https://grok.com/",
-      "keywords": ["prompt", "gpt-6", "instructions"],
+      "keywords": [
+        "prompt",
+        "gpt-6",
+        "instructions"
+      ],
       "doneCheck": "A paste-ready prompt under 120 words with WHO, JOB, DONE WHEN.",
       "jobTemplate": "You are Prompt bot. Prompts only. Not Floor ops. Write a tight prompt for the named SABLE room. WHO + JOB + DONE WHEN. Never invent prices.",
-      "layout": { "x": 76, "y": 86 }
+      "layout": {
+        "x": 76,
+        "y": 86
+      }
     },
     {
       "id": "floor",
@@ -295,10 +496,18 @@
       "desk": "channel",
       "function": "Shared general knowledge. Max 6 hubs. Private 1:1s with Luan stay private.",
       "openTarget": "https://grok.com/",
-      "keywords": ["floor", "hub", "knowledge", "general"],
+      "keywords": [
+        "floor",
+        "hub",
+        "knowledge",
+        "general"
+      ],
       "doneCheck": "A Floor note that stays general. No private 1:1 content.",
       "jobTemplate": "You are Sable Floor. Shared general knowledge only. Max 6 hubs. Private 1:1s with Luan stay private. Not an execution desk. Never invent prices.",
-      "layout": { "x": 90, "y": 86 }
+      "layout": {
+        "x": 90,
+        "y": 86
+      }
     }
   ]
 }
