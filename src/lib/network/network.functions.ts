@@ -88,3 +88,15 @@ export const removeAgent = createServerFn({ method: "POST" })
     const { runRemoveAgent } = await import("./network.server");
     return runRemoveAgent(data.id);
   });
+
+/** Mint ephemeral Grok Voice Mode client secret (server-only XAI_API_KEY). */
+export const createVoiceSession = createServerFn({ method: "POST" }).handler(
+  async (): Promise<{
+    clientSecret: string;
+    expiresAt?: number;
+    model: "grok-voice-latest";
+  }> => {
+    const { runCreateVoiceSession } = await import("./voice.server");
+    return runCreateVoiceSession();
+  },
+);
