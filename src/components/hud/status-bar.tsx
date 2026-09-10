@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { KeyRound, Link2, ListChecks, Mic, MicOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DOCKS } from "@/lib/hq/catalog";
@@ -39,12 +38,12 @@ export function StatusBar({
 
   return (
     <header className="flex items-center gap-3 px-4 py-3 sm:px-6">
-      <Link to="/" className="flex min-w-0 items-baseline gap-2 no-underline">
+      <a href="/" className="flex min-w-0 items-baseline gap-2 no-underline">
         <span className="text-lg font-semibold tracking-[0.28em] text-fg">SABLE</span>
         <span className="hidden font-mono text-[0.68rem] tracking-[0.18em] text-muted uppercase sm:inline">
           HQ · CEO command
         </span>
-      </Link>
+      </a>
       <nav className="ml-2 flex min-w-0 items-center gap-2 overflow-x-auto">
         {DOCKS.map((dock) => (
           <a

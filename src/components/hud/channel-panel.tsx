@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { Copy, ExternalLink, X } from "lucide-react";
 import { toast } from "sonner";
 import { gpt6Job, missionPackText, openUrl, reportsTo } from "@/lib/hq/catalog";
@@ -90,13 +89,12 @@ export function ChannelPanel({ room, pack, openTarget, onOpen, onCopied, onClose
         <Button variant="ghost" onClick={() => void copyPack()}>
           Copy mission pack
         </Button>
-        <Link
-          to="/station/$slug"
-          params={{ slug: room.slug }}
+        <a
+          href={`/station/${room.slug}`}
           className="inline-flex h-9 items-center rounded-sm border border-border px-3 text-xs text-fg no-underline hover:bg-elevated"
         >
           Station
-        </Link>
+        </a>
       </div>
 
       <p className="mt-auto pt-3 font-mono text-[0.62rem] leading-relaxed tracking-wide text-subtle">

@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { childrenOf, ceoRoom, ROOMS } from "@/lib/hq/catalog";
 import type { MissionPack, Room } from "@/lib/hq/types";
 import { cn } from "@/lib/utils";
@@ -75,12 +74,12 @@ export function OrgTree({ selectedId, onSelect, highlightIds, pack }: Props) {
         <h2 className="font-mono text-[0.68rem] tracking-[0.28em] text-muted uppercase">
           Network
         </h2>
-        <Link
-          to="/protocol"
+        <a
+          href="/protocol"
           className="font-mono text-[0.62rem] tracking-widest text-accent uppercase no-underline hover:opacity-80"
         >
           Protocol
-        </Link>
+        </a>
       </header>
       <div className="hud-scroll min-h-0 flex-1 overflow-y-auto pr-1">
         <NodeRow
