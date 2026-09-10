@@ -1,0 +1,252 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Rajdhani", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+
+  --color-bg: #07090b;
+  --color-surface: #0e1418;
+  --color-elevated: #141c22;
+  --color-fg: #dce8ec;
+  --color-muted: #7d929c;
+  --color-subtle: #5a6d75;
+  --color-accent: #7ecad8;
+  --color-accent-fg: #071015;
+  --color-border: #1c2a31;
+  --color-ok: #6db89a;
+  --color-warn: #c4a15c;
+  --color-danger: #c45c5c;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-border: 0 0 0 1px rgba(220, 232, 236, 0.08);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html,
+  body,
+  #app {
+    min-height: 100dvh;
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    letter-spacing: 0.01em;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 35%, transparent);
+    color: var(--color-fg);
+  }
+}
+
+@layer components {
+  .hud-root {
+    min-height: 100dvh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg);
+    background-image:
+      linear-gradient(
+        color-mix(in oklab, var(--color-accent) 5%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--color-accent) 5%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 56px 56px;
+    background-position: center top;
+  }
+
+  .hud-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-inline: 16px;
+    overflow: auto;
+  }
+
+  @media (min-width: 1024px) {
+    .hud-body {
+      padding-inline: 24px;
+      overflow: hidden;
+    }
+  }
+
+  .hud-cols {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    gap: 12px;
+    flex: 1;
+  }
+
+  @media (min-width: 1024px) {
+    .hud-cols {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, 1fr);
+    }
+  }
+
+  .hud-panel {
+    position: relative;
+    background-color: color-mix(in oklab, var(--color-surface) 92%, transparent);
+    box-shadow: var(--shadow-border);
+    border-radius: var(--radius-xl);
+  }
+
+  .hud-panel::before,
+  .hud-panel::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    border-color: color-mix(in oklab, var(--color-accent) 55%, transparent);
+    border-style: solid;
+  }
+
+  .hud-panel::before {
+    top: 8px;
+    left: 8px;
+    border-width: 1px 0 0 1px;
+  }
+
+  .hud-panel::after {
+    right: 8px;
+    bottom: 8px;
+    border-width: 0 1px 1px 0;
+  }
+
+  .hud-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in oklab, var(--color-accent) 35%, transparent) transparent;
+  }
+
+  .hud-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .hud-scroll::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--color-accent) 28%, transparent);
+    border-radius: 99px;
+  }
+
+  .eq-bar {
+    transform-origin: center bottom;
+    animation: eq-idle 2.4s ease-in-out infinite;
+  }
+
+  .is-listening .eq-bar {
+    animation-name: eq-listen;
+    animation-duration: 0.7s;
+  }
+
+  .is-speaking .eq-bar {
+    animation-name: eq-speak;
+    animation-duration: 0.55s;
+  }
+
+  .is-thinking .eq-bar {
+    animation-name: eq-think;
+    animation-duration: 1.1s;
+  }
+
+  .ring-spin {
+    animation: spin 28s linear infinite;
+  }
+
+  .ring-spin-fast {
+    animation: spin 8s linear infinite reverse;
+  }
+
+  .is-thinking .ring-spin,
+  .is-listening .ring-spin {
+    animation-duration: 10s;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes eq-idle {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(0.7);
+  }
+}
+
+@keyframes eq-listen {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes eq-speak {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  40% {
+    transform: scaleY(0.95);
+  }
+}
+
+@keyframes eq-think {
+  0%,
+  100% {
+    transform: scaleY(0.2);
+  }
+  50% {
+    transform: scaleY(0.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eq-bar,
+  .ring-spin,
+  .ring-spin-fast {
+    animation: none;
+  }
+}
