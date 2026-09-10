@@ -8,7 +8,13 @@ import {
 } from "@/lib/hq/catalog";
 import { EMPTY, loadHq, saveHq, type HqPersist } from "@/lib/hq/storage";
 import type { ActionLog, MissionPack } from "@/lib/hq/types";
-import { createRecognizer, playJarvisLine, speechSupported } from "@/lib/network/voice";
+import {
+  browserSttSupported,
+  createRecognizer,
+  GrokVoiceSession,
+  playJarvisLine,
+  speechSupported,
+} from "@/lib/network/voice";
 import { ChannelPanel } from "./channel-panel";
 import { CommandBar } from "./command-bar";
 import { CommsFeed } from "./comms-feed";
@@ -21,6 +27,7 @@ import { ProfitChecklist } from "./profit-checklist";
 import { StatusBar } from "./status-bar";
 
 type Tab = "terminal" | "comms" | "channel";
+type VoiceMode = "grok" | "browser" | "none";
 
 export function CommandDeck() {
   const [hq, setHq] = useState<HqPersist>(EMPTY);
@@ -35,11 +42,24 @@ export function CommandDeck() {
   const [highlightIds, setHighlightIds] = useState<string[]>([]);
   const [tab, setTab] = useState<Tab>("terminal");
   const listening = useRef(false);
+  const voiceMode = useRef<VoiceMode>("none");
+  const grokRef = useRef<GrokVoiceSession | null>(null);
   const recRef = useRef<ReturnType<typeof createRecognizer>>(null);
   const finalRef = useRef("");
+  const ranForFinal = useRef("");
   const runRef = useRef<(text: string) => Promise<void>>(async () => {});
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
   const hqRef = useRef(hq);
   hqRef.current = hq;
+
+  function runOrderOnce(text: string) {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    if (ranForFinal.current === trimmed) return;
+    ranForFinal.current = trimmed;
+    void runRef.current(trimmed);
+  }
 
   const selected = roomById(selectedId) ?? null;
 
@@ -84,45 +104,18 @@ export function CommandDeck() {
     setSelectedId(who.id);
     setTab("channel");
     setPhase("speaking");
+    // Deterministic pack confirm via speechSynthesis so it does not fight Grok audio.
     await playJarvisLine(spoken, muted);
     setPhase("idle");
     window.setTimeout(() => setHighlightIds([]), 8000);
   };
 
-  function startListen() {
-    if (phase === "thinking" || listening.current) return;
-    const rec = recRef.current;
-    if (!rec) {
-      toast("Voice is not available here — type the order instead");
+  function wireBrowserFallback() {
+    if (!browserSttSupported()) {
+      voiceMode.current = "none";
       return;
     }
-    finalRef.current = "";
-    listening.current = true;
-    setPhase("listening");
-    setCaption("Listening…");
-    try {
-      rec.start();
-    } catch {
-      listening.current = false;
-      setPhase("idle");
-    }
-  }
-
-  function stopListen() {
-    if (!listening.current) return;
-    try {
-      recRef.current?.stop();
-    } catch {
-      listening.current = false;
-    }
-  }
-
-  useEffect(() => {
-    persist(loadHq());
-  }, []);
-
-  useEffect(() => {
-    if (!speechSupported()) return;
+    voiceMode.current = "browser";
     recRef.current = createRecognizer({
       onInterim: (text) => setCaption(text),
       onFinal: (text) => {
@@ -136,7 +129,133 @@ export function CommandDeck() {
         else setPhase("idle");
       },
     });
+  }
+
+  async function ensureGrok(): Promise<boolean> {
+    if (grokRef.current?.isConnected) return true;
+    if (!speechSupported()) return false;
+    try {
+      const session = new GrokVoiceSession({
+        onPhase: (p) => {
+          if (listening.current || p === "speaking" || p === "thinking") setPhase(p);
+        },
+        onTranscript: (text, interim) => {
+          setCaption(text);
+          if (!interim) {
+            finalRef.current = text;
+            runOrderOnce(text);
+          }
+        },
+        onAssistantText: (text) => {
+          if (text && !mutedRef.current) setCaption(text);
+        },
+        onError: (message) => {
+          toast(message);
+        },
+      });
+      await session.connect();
+      grokRef.current = session;
+      voiceMode.current = "grok";
+      return true;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Grok Voice session mint failed";
+      toast(`Voice mint failed — falling back to browser STT. ${msg}`);
+      grokRef.current = null;
+      wireBrowserFallback();
+      return false;
+    }
+  }
+
+  async function startListen() {
+    if (phase === "thinking" || listening.current) return;
+    finalRef.current = "";
+    ranForFinal.current = "";
+    listening.current = true;
+    setPhase("listening");
+    setCaption("Listening…");
+
+    if (voiceMode.current === "grok" || voiceMode.current === "none") {
+      const ok = await ensureGrok();
+      if (ok && grokRef.current) {
+        try {
+          await grokRef.current.startListening();
+          return;
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : "mic failed";
+          toast(`Mic failed — ${msg}`);
+          listening.current = false;
+          setPhase("idle");
+          return;
+        }
+      }
+    }
+
+    if (voiceMode.current === "browser") {
+      const rec = recRef.current;
+      if (!rec) {
+        toast("Voice is not available here — type the order instead");
+        listening.current = false;
+        setPhase("idle");
+        return;
+      }
+      try {
+        rec.start();
+      } catch {
+        listening.current = false;
+        setPhase("idle");
+      }
+      return;
+    }
+
+    toast("Voice is not available here — type the order instead");
+    listening.current = false;
+    setPhase("idle");
+  }
+
+  function stopListen() {
+    if (!listening.current) return;
+    listening.current = false;
+    if (voiceMode.current === "grok" && grokRef.current) {
+      // server_vad handles turn ends while held; on release stop mic (optional commit).
+      grokRef.current.stopListening({ commit: false });
+      const spoken = finalRef.current.trim() || grokRef.current.getLastFinalUser().trim();
+      if (spoken) runOrderOnce(spoken);
+      else if (phase === "listening") setPhase("idle");
+      return;
+    }
+    try {
+      recRef.current?.stop();
+    } catch {
+      /* ignore */
+    }
+  }
+
+  useEffect(() => {
+    persist(loadHq());
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!speechSupported()) {
+        if (browserSttSupported()) wireBrowserFallback();
+        else voiceMode.current = "none";
+        return;
+      }
+      voiceMode.current = "grok";
+      // Warm mint/connect lazily on first press; keep fallback ready if mint fails later.
+      if (browserSttSupported() && !cancelled) {
+        // Pre-wire browser recognizer only as standby; prefer Grok on press.
+        /* standby created inside ensureGrok failure path */
+      }
+    })();
     return () => {
+      cancelled = true;
+      try {
+        grokRef.current?.close();
+      } catch {
+        /* ignore */
+      }
       try {
         recRef.current?.abort();
       } catch {
@@ -156,7 +275,7 @@ export function CommandDeck() {
       }
       if (e.code !== "Space" || e.repeat) return;
       e.preventDefault();
-      if (e.type === "keydown") startListen();
+      if (e.type === "keydown") void startListen();
       else stopListen();
     }
     window.addEventListener("keydown", onKey);
@@ -229,7 +348,7 @@ export function CommandDeck() {
             <JarvisCore
               phase={phase}
               caption={caption}
-              onPressStart={startListen}
+              onPressStart={() => void startListen()}
               onPressEnd={stopListen}
             />
           </div>
@@ -241,7 +360,7 @@ export function CommandDeck() {
             <JarvisCore
               phase={phase}
               caption={caption}
-              onPressStart={startListen}
+              onPressStart={() => void startListen()}
               onPressEnd={stopListen}
             />
           </div>
@@ -304,7 +423,7 @@ export function CommandDeck() {
         value={draft}
         onChange={setDraft}
         onSubmit={() => void runRef.current(draft)}
-        onListen={startListen}
+        onListen={() => void startListen()}
         disabled={phase === "thinking"}
         listening={phase === "listening"}
       />
