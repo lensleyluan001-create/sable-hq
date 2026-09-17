@@ -74,7 +74,7 @@ Paste real Grok bot share URLs in HQ → deep links. Defaults open https://grok.
 ## Docks (untouched live apps)
 
 - CRM: https://sable-floor.vercel.app/login
-- Shop / Enquire: https://sable-floor-web.vercel.app/want
+- Shop / Enquire: https://sable-floor.vercel.app/want
 
 ## Voice (Grok Voice Mode)
 
